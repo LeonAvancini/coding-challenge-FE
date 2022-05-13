@@ -1,6 +1,8 @@
 import React from "react";
-import { devices } from "../breakpoints";
+
 import styled from "styled-components";
+
+import { devices } from "../breakpoints";
 
 const FooterStyled = styled.header`
   display: flex;

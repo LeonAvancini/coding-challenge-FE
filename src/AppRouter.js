@@ -1,11 +1,12 @@
 import React from "react";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
 import { Footer } from "./layouts/Footer";
 import { Header } from "./layouts/Header";
 import Home from "./pages/Home";
 
-const AppRouter = (props) => {
+const AppRouter = () => {
   return (
     <Router>
       <Header />

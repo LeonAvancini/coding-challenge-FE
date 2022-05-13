@@ -17,4 +17,4 @@ RUN yarn add global react-scripts@3.4.0
 ADD . /usr/src/app
 
 # start app
-CMD ["yarn", "start"]
+CMD ['yarn', 'start']

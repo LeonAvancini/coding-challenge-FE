@@ -1,1 +1,1 @@
-DROP TABLE "public"."company_investors";
+DROP TABLE 'public'.'company_investors';
