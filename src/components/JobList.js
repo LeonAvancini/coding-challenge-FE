@@ -1,16 +1,12 @@
 import React, { useState } from "react";
 
-import { useQuery } from "@apollo/react-hooks";
 import { Col, Row, Pagination } from "antd";
 
-import { QUERY_JOBS } from "../queries/Jobs";
 import JobCard from "./JobCard";
 
-const loadingCards = [...Array(10).keys()];
 const cardsPerPage = 10;
 
-export const JobList = () => {
-  const { loading, error, data } = useQuery(QUERY_JOBS);
+export const JobList = ({ jobs }) => {
   const [page, setPage] = useState(1);
 
   const handleChangePage = (newPage) => {
@@ -18,16 +14,11 @@ export const JobList = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (loading) return loadingCards.map((i) => <JobCard key={i} isLoading />);
-
-  //FIXME: Show error message with styles (OPTIONAL)
-  if (error) return <p>Error! ${error.message}</p>;
-
   return (
     <Row justify="center">
       <Col xs={20} md={20}>
         <Row justify="space-evenly" align="middle">
-          {data.jobs
+          {jobs
             .slice(
               (page - 1) * cardsPerPage,
               (page - 1) * cardsPerPage + cardsPerPage
@@ -51,7 +42,7 @@ export const JobList = () => {
           <Pagination
             size="small"
             defaultCurrent={1}
-            total={data.jobs.length}
+            total={jobs.length}
             onChange={(value) => handleChangePage(value)}
             showSizeChanger={false}
             style={{ marginBottom: "15px" }}
