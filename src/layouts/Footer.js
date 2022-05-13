@@ -1,5 +1,4 @@
 import React from "react";
-
 import styled from "styled-components";
 
 import { devices } from "../breakpoints";
@@ -10,9 +9,7 @@ const FooterStyled = styled.header`
   color: #ffffff;
   padding: 10px;
   background: #020024;
-
   margin-bottom: 10px;
-
   @media ${devices.tablet} {
     padding: 20px;
   }

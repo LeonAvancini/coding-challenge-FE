@@ -1,5 +1,4 @@
 import React from "react";
-
 import { SearchOutlined } from "@ant-design/icons";
 import { Typography, Row } from "antd";
 import styled from "styled-components";

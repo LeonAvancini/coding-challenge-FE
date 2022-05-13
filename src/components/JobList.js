@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import { Col, Row, Pagination } from "antd";
 
 import JobCard from "./JobCard";
@@ -15,7 +14,7 @@ export const JobList = ({ jobs }) => {
   };
 
   return (
-    <Row justify="center">
+    <Row justify="center" style={{ height: "100vh" }}>
       <Col xs={20} md={20}>
         <Row justify="space-evenly" align="middle">
           {jobs
@@ -45,7 +44,6 @@ export const JobList = ({ jobs }) => {
             total={jobs.length}
             onChange={(value) => handleChangePage(value)}
             showSizeChanger={false}
-            style={{ marginBottom: "15px" }}
             hideOnSinglePage
           />
         </Row>

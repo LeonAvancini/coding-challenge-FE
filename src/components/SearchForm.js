@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
-
 import { Form, Input, Button, Select, Row, Col } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
+import styled from "styled-components";
 
 const { Option } = Select;
 const FormStyled = styled(Form)`
@@ -18,7 +18,7 @@ const FormStyled = styled(Form)`
   );
 `;
 
-export const SearchForm = ({ initialData }) => {
+export const SearchForm = ({ initialData, dataFiltered }) => {
   const formRef = useRef();
 
   const [selectValues, setSelectValues] = useState({
@@ -50,8 +50,19 @@ export const SearchForm = ({ initialData }) => {
   };
 
   const handleSubmit = (e) => {
-    //add function to filter array
-    console.log("formValues", e);
+    const fitlerByJobTitle = initialData.filter((job) =>
+      e?.jobTitle ? job.title.toLowerCase().includes(e.jobTitle) : job
+    );
+
+    const fitlerByCity = fitlerByJobTitle.filter((job) =>
+      e?.citySelected ? job.city.includes(e.citySelected) : job
+    );
+
+    const fitlerByCompanyName = fitlerByCity.filter((job) =>
+      e?.companySelected ? job.company.name.includes(e.companySelected) : job
+    );
+
+    dataFiltered(fitlerByCompanyName);
   };
 
   const onReset = () => {
@@ -70,7 +81,7 @@ export const SearchForm = ({ initialData }) => {
       >
         <Row justify="center" align="center">
           <Col>
-            <Form.Item name="job-title">
+            <Form.Item name="jobTitle">
               <Input
                 style={{ width: 300, marginBottom: "10px" }}
                 type="search"
@@ -83,7 +94,7 @@ export const SearchForm = ({ initialData }) => {
             </Form.Item>
           </Col>
           <Col>
-            <Form.Item name="city-selected">
+            <Form.Item name="citySelected">
               <Select
                 showSearch
                 style={{ width: 300, marginBottom: "10px" }}
@@ -110,7 +121,7 @@ export const SearchForm = ({ initialData }) => {
         </Row>
         <Row justify="center" align="center">
           <Col>
-            <Form.Item name="company-selected">
+            <Form.Item name="companySelected">
               <Select
                 showSearch
                 style={{ width: 300, marginBottom: "10px" }}
@@ -137,12 +148,23 @@ export const SearchForm = ({ initialData }) => {
           <Col>
             <Row justify="center" align="center">
               <Form.Item>
-                <Button block htmlType="button" onClick={onReset}>
+                <Button
+                  block
+                  htmlType="button"
+                  type="primary"
+                  danger
+                  onClick={onReset}
+                >
                   Reset
                 </Button>
               </Form.Item>
               <Form.Item>
-                <Button block htmlType="submit">
+                <Button
+                  block
+                  htmlType="submit"
+                  type="primary"
+                  icon={<SearchOutlined />}
+                >
                   Search
                 </Button>
               </Form.Item>
