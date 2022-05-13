@@ -37,14 +37,18 @@ const TitleStyled = styled(Title)`
   }
 `;
 
+const IconStyled = styled(SearchOutlined)`
+  font-size: 40px;
+  color: #00d4ff;
+  margin-right: 10px;
+`;
+
 export const Header = () => {
   return (
     <HeaderStyled>
       <Row align="middle">
-        <SearchOutlined
-          style={{ fontSize: "40px", color: "#00d4ff", marginRight: "10px" }}
-        />
-        <TitleStyled>JoobGlee! </TitleStyled>
+        <IconStyled />
+        <TitleStyled>JoobGlee!</TitleStyled>
       </Row>
     </HeaderStyled>
   );
