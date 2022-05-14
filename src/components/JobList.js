@@ -14,7 +14,7 @@ export const JobList = ({ jobs }) => {
   };
 
   return (
-    <Row justify="center" style={{ height: "100vh" }}>
+    <Row justify="center">
       <Col xs={20} md={20}>
         <Row justify="space-evenly" align="middle">
           {jobs

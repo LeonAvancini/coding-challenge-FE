@@ -18,8 +18,8 @@ const Home = () => {
   //FIXME: Show error message with styles (OPTIONAL)
   if (error) return <p>Error! ${error.message}</p>;
 
-  const handleFilteredData = (jobsFiltered) => {
-    setJobsFiltered(jobsFiltered);
+  const handleFilteredData = (values) => {
+    setJobsFiltered(values);
   };
 
   return (

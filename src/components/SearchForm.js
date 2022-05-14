@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, Button, Select, Row, Col } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import styled from "styled-components";
@@ -9,17 +9,11 @@ const FormStyled = styled(Form)`
   padding: 20px;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
-  background: rgb(71, 71, 71);
-  background: linear-gradient(
-    90deg,
-    rgba(71, 71, 71, 1) 0%,
-    rgba(166, 161, 161, 1) 35%,
-    rgba(191, 189, 189, 1) 100%
-  );
+  background: rgba(191, 189, 189, 1);
 `;
 
 export const SearchForm = ({ initialData, dataFiltered }) => {
-  const formRef = useRef();
+  const [form] = Form.useForm();
 
   const [selectValues, setSelectValues] = useState({
     cityNames: [],
@@ -49,39 +43,57 @@ export const SearchForm = ({ initialData, dataFiltered }) => {
     return { cityNames, companyNames };
   };
 
-  const handleSubmit = (e) => {
-    const fitlerByJobTitle = initialData.filter((job) =>
-      e?.jobTitle ? job.title.toLowerCase().includes(e.jobTitle) : job
-    );
+  const handleSubmit = () => {
+    let inputForm = form.getFieldsValue();
+    let dataFilter = initialData;
 
-    const fitlerByCity = fitlerByJobTitle.filter((job) =>
-      e?.citySelected ? job.city.includes(e.citySelected) : job
-    );
+    dataFilter = initialData.filter((job) => {
+      let flag = true;
 
-    const fitlerByCompanyName = fitlerByCity.filter((job) =>
-      e?.companySelected ? job.company.name.includes(e.companySelected) : job
-    );
+      for (const key of Object.keys(inputForm)) {
+        if (!inputForm[key]) {
+          continue;
+        }
 
-    dataFiltered(fitlerByCompanyName);
+        const jobProperyData = JSON.stringify(job[key])?.toLowerCase().trim();
+        const inputProperyData = inputForm[key]?.toLowerCase().trim();
+
+        if (jobProperyData.includes(inputProperyData)) {
+          if (flag) {
+            flag = true;
+          } else {
+            flag = false;
+          }
+        } else {
+          flag = false;
+        }
+      }
+      if (flag) {
+        return job;
+      }
+      return null;
+    });
+
+    dataFiltered(dataFilter);
   };
 
-  const onReset = () => {
-    formRef.current.resetFields();
+  const resetForm = () => {
+    form.resetFields();
     handleSubmit();
   };
 
   return (
     <Row justify="center" align="center">
       <FormStyled
-        onFinish={(event) => handleSubmit(event)}
+        onFinish={handleSubmit}
         size="large"
         layout="inline"
         name="search-careers-form"
-        ref={formRef}
+        form={form}
       >
         <Row justify="center" align="center">
           <Col>
-            <Form.Item name="jobTitle">
+            <Form.Item name="title">
               <Input
                 style={{ width: 300, marginBottom: "10px" }}
                 type="search"
@@ -94,7 +106,7 @@ export const SearchForm = ({ initialData, dataFiltered }) => {
             </Form.Item>
           </Col>
           <Col>
-            <Form.Item name="citySelected">
+            <Form.Item name="city">
               <Select
                 showSearch
                 style={{ width: 300, marginBottom: "10px" }}
@@ -121,7 +133,7 @@ export const SearchForm = ({ initialData, dataFiltered }) => {
         </Row>
         <Row justify="center" align="center">
           <Col>
-            <Form.Item name="companySelected">
+            <Form.Item name="company">
               <Select
                 showSearch
                 style={{ width: 300, marginBottom: "10px" }}
@@ -153,7 +165,7 @@ export const SearchForm = ({ initialData, dataFiltered }) => {
                   htmlType="button"
                   type="primary"
                   danger
-                  onClick={onReset}
+                  onClick={resetForm}
                 >
                   Reset
                 </Button>

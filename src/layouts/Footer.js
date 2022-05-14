@@ -9,7 +9,7 @@ const FooterStyled = styled.header`
   color: #ffffff;
   padding: 10px;
   background: #020024;
-  margin-bottom: 10px;
+  margin: 10px 0px;
   @media ${devices.tablet} {
     padding: 20px;
   }
