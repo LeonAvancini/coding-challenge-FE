@@ -29,7 +29,6 @@ export const JobList = ({ jobs }) => {
             .map((job) => (
               <Col key={job.id} md={9} xs={24}>
                 <JobCard
-                  id={job.id}
                   title={job.title}
                   city={job.city}
                   CompanyName={job.company.name}
@@ -49,6 +48,7 @@ export const JobList = ({ jobs }) => {
             onChange={(value) => handleChangePage(value)}
             showSizeChanger={false}
             hideOnSinglePage
+            style={{ margin: "20px" }}
           />
         </Row>
       </Col>

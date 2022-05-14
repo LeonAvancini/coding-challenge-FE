@@ -20,14 +20,7 @@ const StyledCard = styled(Card)`
 
 const { Title, Text } = Typography;
 
-export const JobCard = ({
-  id,
-  title,
-  city,
-  CompanyName,
-  investors,
-  isLoading,
-}) => {
+export const JobCard = ({ title, city, CompanyName, investors, isLoading }) => {
   const investorsFormatted = investors?.reduce(
     (acc, act, i) => acc + (i ? " - " : "") + act.investor.name,
     ""

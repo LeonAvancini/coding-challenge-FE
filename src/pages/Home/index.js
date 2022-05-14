@@ -55,7 +55,7 @@ const Home = () => {
         />
       </Col>
       <Col span={24}>
-        <JobList jobs={dataWasFiltered ? jobsFiltered : data.jobs} />;
+        <JobList jobs={dataWasFiltered ? jobsFiltered : data.jobs} />
       </Col>
     </RowStyled>
   );
