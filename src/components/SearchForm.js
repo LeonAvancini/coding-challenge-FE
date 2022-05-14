@@ -18,6 +18,7 @@ export const SearchForm = ({ initialData, dataFiltered }) => {
   const [selectValues, setSelectValues] = useState({
     cityNames: [],
     companyNames: [],
+    investorsName: [],
   });
 
   useEffect(() => {
@@ -40,41 +41,59 @@ export const SearchForm = ({ initialData, dataFiltered }) => {
       return acc;
     }, []);
 
-    return { cityNames, companyNames };
+    const investorsName = data.reduce((acc, item) => {
+      let investors = item.company.company_investors.map(
+        (investor) => investor.investor.name
+      );
+
+      investors.map((item) => {
+        if (!acc.includes(item)) {
+          acc.push(item);
+          return item;
+        }
+        return item;
+      });
+
+      return acc;
+    }, []);
+
+    return { cityNames, companyNames, investorsName };
   };
 
   const handleSubmit = () => {
-    let inputForm = form.getFieldsValue();
-    let dataFilter = initialData;
+    let { title, city, company, investor } = form.getFieldsValue();
 
-    dataFilter = initialData.filter((job) => {
-      let flag = true;
+    const filterByTitle = title
+      ? initialData.filter((job) => {
+          return job.title
+            .toLowerCase()
+            .trim()
+            .includes(title.toLowerCase().trim())
+            ? job
+            : null;
+        })
+      : initialData;
 
-      for (const key of Object.keys(inputForm)) {
-        if (!inputForm[key]) {
-          continue;
-        }
+    const filterByCity = city
+      ? filterByTitle.filter((job) => (job.city === city ? job : null))
+      : filterByTitle;
 
-        const jobProperyData = JSON.stringify(job[key])?.toLowerCase().trim();
-        const inputProperyData = inputForm[key]?.toLowerCase().trim();
+    const filterByCompany = company
+      ? filterByCity.filter((job) =>
+          job.company.name === company ? job : null
+        )
+      : filterByCity;
 
-        if (jobProperyData.includes(inputProperyData)) {
-          if (flag) {
-            flag = true;
-          } else {
-            flag = false;
-          }
-        } else {
-          flag = false;
-        }
-      }
-      if (flag) {
-        return job;
-      }
-      return null;
-    });
+    const filterByInvestor = investor
+      ? filterByCompany.filter((job) => {
+          let investorsPerJob = job.company.company_investors.map(
+            (item) => item?.investor.name
+          );
+          return investorsPerJob.includes(investor) ? job : null;
+        })
+      : filterByCompany;
 
-    dataFiltered(dataFilter);
+    dataFiltered(filterByInvestor);
   };
 
   const resetForm = () => {
@@ -83,7 +102,7 @@ export const SearchForm = ({ initialData, dataFiltered }) => {
   };
 
   return (
-    <Row justify="center" align="center">
+    <Row justify="flex-start">
       <FormStyled
         onFinish={handleSubmit}
         size="large"
@@ -91,98 +110,116 @@ export const SearchForm = ({ initialData, dataFiltered }) => {
         name="search-careers-form"
         form={form}
       >
-        <Row justify="center" align="center">
-          <Col>
-            <Form.Item name="title">
-              <Input
-                style={{ width: 300, marginBottom: "10px" }}
-                type="search"
-                placeholder="Job description"
-                autoFocus
-                autoCapitalize="off"
-                autoCorrect="off"
-                maxLength="60"
-              />
-            </Form.Item>
-          </Col>
-          <Col>
-            <Form.Item name="city">
-              <Select
-                showSearch
-                style={{ width: 300, marginBottom: "10px" }}
-                placeholder="Search city"
-                optionFilterProp="children"
-                filterOption={(input, option) =>
-                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
-                  0
-                }
-                filterSort={(optionA, optionB) =>
-                  optionA.children
-                    .toLowerCase()
-                    .localeCompare(optionB.children.toLowerCase())
-                }
+        <Col>
+          <Form.Item name="title">
+            <Input
+              style={{ width: 300, marginBottom: "10px" }}
+              type="search"
+              placeholder="Job description"
+              autoFocus
+              autoCapitalize="off"
+              autoCorrect="off"
+              maxLength="60"
+            />
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item name="city">
+            <Select
+              showSearch
+              style={{ width: 300, marginBottom: "10px" }}
+              placeholder="Search by city"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              filterSort={(optionA, optionB) =>
+                optionA.children
+                  .toLowerCase()
+                  .localeCompare(optionB.children.toLowerCase())
+              }
+            >
+              {selectValues.cityNames.map((option, i) => (
+                <Option key={i} value={option}>
+                  {option}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item name="company">
+            <Select
+              showSearch
+              style={{ width: 300, marginBottom: "10px" }}
+              placeholder="Search by Company"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              filterSort={(optionA, optionB) =>
+                optionA.children
+                  .toLowerCase()
+                  .localeCompare(optionB.children.toLowerCase())
+              }
+            >
+              {selectValues.companyNames.map((option, i) => (
+                <Option key={i} value={option}>
+                  {option}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item name="investor">
+            <Select
+              showSearch
+              style={{ width: 300, marginBottom: "10px" }}
+              placeholder="Search by Inversor"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              filterSort={(optionA, optionB) =>
+                optionA.children
+                  .toLowerCase()
+                  .localeCompare(optionB.children.toLowerCase())
+              }
+            >
+              {selectValues.investorsName.map((option, i) => (
+                <Option key={i} value={option}>
+                  {option}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Row justify="flex-start" align="center">
+            <Form.Item>
+              <Button
+                block
+                htmlType="button"
+                type="primary"
+                danger
+                onClick={resetForm}
               >
-                {selectValues.cityNames.map((option, i) => (
-                  <Option key={i} value={option}>
-                    {option}
-                  </Option>
-                ))}
-              </Select>
+                Reset
+              </Button>
             </Form.Item>
-          </Col>
-        </Row>
-        <Row justify="center" align="center">
-          <Col>
-            <Form.Item name="company">
-              <Select
-                showSearch
-                style={{ width: 300, marginBottom: "10px" }}
-                placeholder="Search Company"
-                optionFilterProp="children"
-                filterOption={(input, option) =>
-                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
-                  0
-                }
-                filterSort={(optionA, optionB) =>
-                  optionA.children
-                    .toLowerCase()
-                    .localeCompare(optionB.children.toLowerCase())
-                }
+            <Form.Item>
+              <Button
+                block
+                htmlType="submit"
+                type="primary"
+                icon={<SearchOutlined />}
               >
-                {selectValues.companyNames.map((option, i) => (
-                  <Option key={i} value={option}>
-                    {option}
-                  </Option>
-                ))}
-              </Select>
+                Search
+              </Button>
             </Form.Item>
-          </Col>
-          <Col>
-            <Row justify="center" align="center">
-              <Form.Item>
-                <Button
-                  block
-                  htmlType="button"
-                  type="primary"
-                  danger
-                  onClick={resetForm}
-                >
-                  Reset
-                </Button>
-              </Form.Item>
-              <Form.Item>
-                <Button
-                  block
-                  htmlType="submit"
-                  type="primary"
-                  icon={<SearchOutlined />}
-                >
-                  Search
-                </Button>
-              </Form.Item>
-            </Row>
-          </Col>
-        </Row>
+          </Row>
+        </Col>
       </FormStyled>
     </Row>
   );

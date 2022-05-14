@@ -10,6 +10,7 @@ const FooterStyled = styled.header`
   padding: 10px;
   background: #020024;
   margin: 10px 0px;
+  margin-top: auto;
   @media ${devices.tablet} {
     padding: 20px;
   }
