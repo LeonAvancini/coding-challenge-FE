@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Row, Pagination } from "antd";
 
 import JobCard from "./JobCard";
@@ -7,6 +7,10 @@ const cardsPerPage = 10;
 
 export const JobList = ({ jobs }) => {
   const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    setPage(1);
+  }, [jobs]);
 
   const handleChangePage = (newPage) => {
     setPage(newPage);
