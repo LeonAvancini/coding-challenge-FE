@@ -28,8 +28,19 @@ const Home = () => {
 
   if (loading) return loadingCards.map((i) => <JobCard key={i} isLoading />);
 
-  if (error) return <p>Error! ${error.message}</p>;
-
+  if (error) {
+    return (
+      <RowStyled justify="center" align="center">
+        <Col span={24}>
+          <SearchForm
+            initialData={data.jobs}
+            dataFiltered={(data) => handleFilteredData(data)}
+          />
+        </Col>
+        <Title style={{ marginTop: "20px" }}>An error occurred</Title>
+      </RowStyled>
+    );
+  }
   if (
     (dataWasFiltered && !jobsFiltered.length) ||
     (!dataWasFiltered && !data.jobs)
